@@ -1,10 +1,12 @@
-// C++ code
-//
-int pinSensor =2;
-int pinLed =12;
-int pinMotion = 7;
-int pinBuzzer =13;
-int pirSensor =0;
+// hangar_door.ino
+// Hangar Door Motion sensor file. This will detect motion and
+// set motion pin high and is monitored by the LED device.
+
+int pinSensor = 2;
+int pinLed = 12;
+int pinMotion = 8;
+int pinBuzzer = 13;
+int pirSensor = 0;
 
 void setup()
 {
@@ -24,10 +26,11 @@ void loop()
   pirSensor = digitalRead(pinSensor);
   if (pirSensor == HIGH)
   {
-  
-    digitalWrite(pinLed, HIGH);
     
-    // Tell Uno2 there was motion and kick off audio
+    digitalWrite(pinLed, HIGH);
+
+    // Set the motion pin high so the audio and LED devices can activate
+    // audio and the LED  
     digitalWrite(pinMotion, HIGH);
     Serial.println(digitalRead(pinMotion));
     
