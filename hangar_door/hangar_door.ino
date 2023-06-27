@@ -2,57 +2,53 @@
 // Hangar Door Motion sensor file. This will detect motion and
 // set motion pin high and is monitored by the LED device.
 
-int pinSensor = 2;
+int pinBreakBeam = 2;
 int pinLed = 12;
-int pinMotion = 8;
+int pinMotionSignal = 8;
 int pinBuzzer = 13;
 int beamSensorState = 0;
 int beamSensorLastState = 0;
+int ledDelayTime = 15000; //15000 seconds
+unsigned long previousTime = 0;
+
 
 void setup()
 {
   Serial.begin(115200);
-  
-  pinMode(pinSensor, INPUT);
+
   pinMode(pinLed, OUTPUT);
   pinMode(pinBuzzer, OUTPUT);
-  pinMode(pinMotion, OUTPUT);
+  pinMode(pinMotionSignal, OUTPUT);
+
+  pinMode(pinBreakBeam, INPUT_PULLUP);
+  //Setup interrupt for break beam sensor
+  attachInterrupt (digitalPinToInterrupt (2), detected, FALLING);   
   
 }
 
-void loop()
+void detected ()
 {
-  Serial.println(digitalRead(pinMotion));
+  //Interrupt detected
+  Serial.println("Interrupt detected");
+  digitalWrite(pinLed, HIGH);
   
-  beamSensorState = digitalRead(pinSensor);
+  //start time to turn off LED after 15s
+  //delayMicroseconds(100000000);
+  //digitalWrite(pinLed, LOW);
 
-  if (beamSensorState == LOW){
-    // turn LED on:
-    digitalWrite(pinLed, HIGH);
-
-    // Set the motion pin high so the audio and LED devices can activate
-    // audio and the LED  
-    digitalWrite(pinMotion, HIGH);
-    Serial.println(digitalRead(pinMotion));
-    
-    tone(pinBuzzer, 1000, 500);
-
-  }
-  else {
-    // LED OFF and NO BUZZER
-    digitalWrite(pinLed, LOW);
-    //tone(pinBuzzer, 0, 0);
+  bool temp = false;
+  while(!temp){
+    temp = ledTimer();
   }
 
-  if (beamSensorState && !beamSensorLastState){
-    Serial.println("Unbroken");
-  }
-  if (!beamSensorState && beamSensorLastState){
-    Serial.println("Broken");
-  }
-  beamSensorLastState = beamSensorState;
-  
-  delay(100);
+  // Set the motion pin high so the audio and LED devices can activate
+  // audio and the LED //Cue audiot 
+  digitalWrite(pinMotionSignal, HIGH);
 }
+
   
-//delay(100);
+}
+void loop()
+{  
+
+}
