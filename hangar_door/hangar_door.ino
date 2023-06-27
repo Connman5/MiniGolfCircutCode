@@ -3,6 +3,7 @@
 // set motion pin high and is monitored by the LED device.
 
 int pinBreakBeam = 2;
+int pinMusicStatus = 4
 int pinLed = 12;
 int pinMotionSignal = 8;
 int pinBuzzer = 13;
@@ -12,8 +13,7 @@ int ledDelayTime = 15000; //15000 seconds
 unsigned long previousTime = 0;
 
 
-void setup()
-{
+void setup(){
   Serial.begin(115200);
 
   pinMode(pinLed, OUTPUT);
@@ -23,24 +23,18 @@ void setup()
   pinMode(pinBreakBeam, INPUT_PULLUP);
   //Setup interrupt for break beam sensor
   attachInterrupt (digitalPinToInterrupt (2), detected, FALLING);   
+
+  // Music status
+  pinMode(pinMusicStatus, INPUT);
+
   
 }
 
-void detected ()
-{
+void detected(){
   //Interrupt detected
   Serial.println("Interrupt detected");
   digitalWrite(pinLed, HIGH);
-  
-  //start time to turn off LED after 15s
-  //delayMicroseconds(100000000);
-  //digitalWrite(pinLed, LOW);
-
-  bool temp = false;
-  while(!temp){
-    temp = ledTimer();
-  }
-
+ 
   // Set the motion pin high so the audio and LED devices can activate
   // audio and the LED //Cue audiot 
   digitalWrite(pinMotionSignal, HIGH);
@@ -50,5 +44,11 @@ void detected ()
 }
 void loop()
 {  
-
+  //Check for the audio complete signal going high, then turn the LED off
+  while(digitalRead(pinMusicStatus))
+  {
+    //music is done, turn the LED off
+    digitalWrite(pinLed, LOW);
+    
+  }
 }
