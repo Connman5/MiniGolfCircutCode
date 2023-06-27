@@ -3,7 +3,7 @@
 // set motion pin high and is monitored by the LED device.
 
 int pinBreakBeam = 2;
-int pinMusicStatus = 4
+int pinMusicStatus = 4;
 int pinLed = 12;
 int pinMotionSignal = 8;
 int pinBuzzer = 13;
@@ -38,17 +38,15 @@ void detected(){
   // Set the motion pin high so the audio and LED devices can activate
   // audio and the LED //Cue audiot 
   digitalWrite(pinMotionSignal, HIGH);
-}
-
   
 }
+
 void loop()
 {  
   //Check for the audio complete signal going high, then turn the LED off
-  while(digitalRead(pinMusicStatus))
-  {
+  if (digitalRead(pinMusicStatus) == HIGH){
     //music is done, turn the LED off
     digitalWrite(pinLed, LOW);
-    
+
   }
 }
