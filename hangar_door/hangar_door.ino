@@ -40,11 +40,10 @@ void detected(){
   digitalWrite(pinMotionSignal, HIGH);
   
 }
-
 void loop()
 {  
   //Check for the audio complete signal going high, then turn the LED off
-  if (digitalRead(pinMusicStatus) == HIGH){
+  while(digitalRead(pinMusicStatus) == HIGH){
     //music is done, turn the LED off
     digitalWrite(pinLed, LOW);
 
